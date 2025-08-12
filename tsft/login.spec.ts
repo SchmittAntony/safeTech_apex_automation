@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+test.describe.configure({ mode: 'serial' });
+
 // 1. Teste de login válido (sempre primeiro)
 test('Login válido', async ({ page }) => {
   await page.goto('https://sistemas.safetech.inf.br/ords/tsft/f?p=100');

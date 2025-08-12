@@ -13,7 +13,6 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   workers: 1,
-
   testDir: './tsft',
   /* Run tests in files in parallel */
   fullyParallel: true,

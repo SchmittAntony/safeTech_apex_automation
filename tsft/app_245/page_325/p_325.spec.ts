@@ -1,3 +1,5 @@
+// Financeiro -> Cadastros -> Banco
+
 import { test, expect } from '@playwright/test';
 import { acessoAPP245_325 } from './navigation';
 import { gerarCodigoBanco, validarCampoCodigoDisplay } from '../../support/scripts';

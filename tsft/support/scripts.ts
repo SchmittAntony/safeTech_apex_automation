@@ -1,5 +1,5 @@
 
-export function gerarCodigoBanco(): string {
+export function gerarCodigos(): string {
   const codigo = Math.floor(Math.random() * 1000); // 0 a 999
   return codigo.toString().padStart(3, '0'); // completa com zeros à esquerda
 };
@@ -22,7 +22,7 @@ export async function validarCampoCodigoDisplay(page, codigoBancoInicial) {
 
         // Gerar novo código se não for a primeira tentativa
         if (tentativa > 1) {
-            codigoBanco = gerarCodigoBanco();
+            codigoBanco = gerarCodigos();
         }
 
         // Preencher e salvar
@@ -39,5 +39,5 @@ export async function validarCampoCodigoDisplay(page, codigoBancoInicial) {
             }
         }
     }
-}
+};
 

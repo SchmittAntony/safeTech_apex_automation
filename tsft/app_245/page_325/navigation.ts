@@ -5,15 +5,14 @@ import { login } from '../../support/login';
 export async function acessoAPP245_325(page: Page, context: BrowserContext) {
     await login(page);
 
-    // 1. Clicar para abrir a nova janela
-    await page.locator('#arvere_tree_20 > span.a-TreeView-toggle').click();
-    await page.locator('#arvere_tree_494').isVisible();
-    await page.locator('#arvere_tree_494 > span.a-TreeView-toggle').click();
+    // Pesquisa pagina
+    const buttonFinanceiro = await page.locator('div').filter({ hasText: /^Financeiro$/ })
+    await buttonFinanceiro.isVisible();
 
     // 2. Aguardar o evento de abertura de nova janela
     const [newPage] = await Promise.all([
         context.waitForEvent('page'), // Fica aguardando a nova janela
-        page.locator('#arvere_tree_502').click() // Ação que abre a janela
+        buttonFinanceiro.click() // Ação que abre a janela
     ]);
 
     // 3. Verificações na nova janela
@@ -21,7 +20,13 @@ export async function acessoAPP245_325(page: Page, context: BrowserContext) {
     console.log('Nova URL:', newPage.url());
 
     // 4. Validação básica
-    await expect(newPage).toHaveTitle('Banco'); // Adapte se necessário
+    await expect(newPage).toHaveTitle('Financeiro'); // Adapte se necessário
+
+    // acessa Cadastros
+    await newPage.getByRole('link', { name: ' Cadastros' }).click();
+
+    // acessa pagina
+    await newPage.getByRole('link', { name: ' Banco', exact: true }).click();
 
     return newPage;
 }

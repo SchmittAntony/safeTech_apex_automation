@@ -2,7 +2,7 @@ import { Page, BrowserContext, expect } from '@playwright/test';
 import { login } from '../../support/login';
 
 
-export async function acessoAPP245_640(page: Page, context: BrowserContext) {
+export async function acessoAPP245_595(page: Page, context: BrowserContext) {
     await login(page);
 
     // Pesquisa pagina
@@ -26,7 +26,7 @@ export async function acessoAPP245_640(page: Page, context: BrowserContext) {
     await newPage.getByRole('link', { name: ' Cadastros' }).click();
 
     // acessa pagina
-    await newPage.getByRole('link', { name: ' Categoria Lançamento Extrato' }).click();
+    await newPage.getByRole('link', { name: ' Banco Padrão de Faturamento' }).click();
 
     return newPage;
 }

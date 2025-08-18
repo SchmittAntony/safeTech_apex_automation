@@ -88,6 +88,7 @@ import { gerarCodigos, validarCampoCodigoDisplay } from '../../support/scripts';
         await newPage.getByRole('button', { name: 'Remover Filtro' }).click();
 
     });
+    
     test('Tentativa de cadastro sem código Banco', async ({ page, context }) => {
         const newPage = await acessoAPP245_325(page, context);
 

@@ -15,7 +15,7 @@ export default defineConfig({
  testDir: './tsft',
   fullyParallel: false, // garante que não roda paralelo dentro do mesmo arquivo
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 1 : 0,
   workers: 1, // força execução sequencial
   reporter: 'html',
   use: {

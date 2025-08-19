@@ -1,47 +1,37 @@
-name: Run Playwright Tests E2E - TSFT
+name: Playwright Tests
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # botão manual
+    inputs:
+      browser:
+        description: "Escolher navegador (chromium ou firefox)"
+        required: true
+        default: "chromium"
 
 jobs:
-  playwright-tests:
+  tests:
     runs-on: ubuntu-latest
-
-    container:
-      image: mcr.microsoft.com/playwright:v1.54.2-jammy # versão compatível com seu projeto
+    timeout-minutes: 30
+    container: mcr.microsoft.com/playwright:v1.54.2-jammy
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Run Playwright tests (Chromium)
+      # roda só no navegador escolhido
+      - name: Run Playwright Tests
         run: |
-          npx playwright test --project=chromium --reporter=html
-          mv playwright-report playwright-report-chromium
+          npx playwright test \
+            --project=${{ github.event.inputs.browser }} \
+            --reporter=list,html \
+            --workers=2
 
-      - name: Upload Chromium Report
+      - name: Upload Playwright Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-chromium
-          path: playwright-report-chromium/
-
-      - name: Run Playwright tests (Firefox)
-        run: |
-          npx playwright test --project=firefox --reporter=html
-          mv playwright-report playwright-report-firefox
-
-      - name: Upload Firefox Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-firefox
-          path: playwright-report-firefox/
+          name: playwright-report-${{ github.event.inputs.browser }}
+          path: playwright-report

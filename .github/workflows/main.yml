@@ -1,14 +1,14 @@
-name: Run Playwright Tests
+name: Run Playwright Tests E2E - TSFT
 
 on:
-  workflow_dispatch: # Executa manualmente (botão)
+  workflow_dispatch:
 
 jobs:
   playwright-tests:
     runs-on: ubuntu-latest
 
     container:
-      image: mcr.microsoft.com/playwright:v1.48.0-jammy # Já vem com Chromium e Firefox instalados
+      image: mcr.microsoft.com/playwright:v1.54.2-jammy # versão compatível com seu projeto
 
     steps:
       - name: Checkout repository
@@ -22,7 +22,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Executa testes no Chromium e salva relatório
       - name: Run Playwright tests (Chromium)
         run: |
           npx playwright test --project=chromium --reporter=html
@@ -35,7 +34,6 @@ jobs:
           name: playwright-report-chromium
           path: playwright-report-chromium/
 
-      # Executa testes no Firefox e salva relatório
       - name: Run Playwright tests (Firefox)
         run: |
           npx playwright test --project=firefox --reporter=html

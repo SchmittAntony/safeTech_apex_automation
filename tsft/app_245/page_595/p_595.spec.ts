@@ -123,6 +123,4 @@ test('Cadastro com dados Inválidos', async ({ page, context }) => {
         .getByRole('button', { name: 'Incluir Banco por Empresa' })
         .click();
 
-
-
 })

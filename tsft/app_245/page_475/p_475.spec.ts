@@ -47,6 +47,4 @@ test('Agrupamento tipo Vencimento Boleto - Excluir cadastro', async ({ page, con
         .click();
     await newPage.getByRole('button', { name: 'OK' }).click();
 
-    await newPage.waitForTimeout(8000);
-
 })

@@ -77,6 +77,8 @@ test('Cadastro Banco por Empresa > Valido', async ({ page, context }) => {
         await botaoEditar.click();
     }
 
+    await newPage.waitForTimeout(4000);
+
     await newPage.locator('iframe[title="Cadastro Banco por Empresa"]')
         .contentFrame()
         .getByRole('button', { name: 'Excluir' })

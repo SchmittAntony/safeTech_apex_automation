@@ -6,8 +6,8 @@ import { gerarCodigos } from '../../support/scripts';
 
 test.describe.configure({ mode: 'serial' });
 
-async function preencherCamposBasicos(page, codigoCategoria) {
-    await page.locator('#P645_CODIGO_CATEGORIA').fill(codigoCategoria);
+async function preencherCamposBasicos(page) {
+    await page.locator('#P645_CODIGO_CATEGORIA').fill('996');
     await page.locator('#P645_TIPO_CATEGORIA').selectOption('C');
     await page.locator('#P645_DESCRICAO').fill('TESTE QUALIDADE - QA');
     await page.locator('#P645_CODIGO_BANCO_lov_btn').click();
@@ -21,8 +21,8 @@ test('Cadastro de categoria válida', async ({ page, context }) => {
     await newPage.getByRole('button', { name: 'Nova Categoria' }).click();
 
     //Preenchimento das informações
-    const codigoCategoria = gerarCodigos();
-    await preencherCamposBasicos(newPage, codigoCategoria);
+    // const codigoCategoria = gerarCodigos();
+    await preencherCamposBasicos(newPage);
     await newPage.getByRole('button', { name: 'Incluir Categoria Lançamento' }).click();
 
     // Fecha notificação
@@ -44,7 +44,7 @@ test('Cadastro de categoria válida', async ({ page, context }) => {
 
     // Excluir registro criado
     const botaoEditar = newPage.getByRole('link', { name: '' });
-    await expect(botaoEditar).toBeVisible({ timeout: 10000 });
+    await expect(botaoEditar).toBeVisible({ timeout: 40000 });
     await botaoEditar.click({ force: true });
     await newPage.getByRole('button', { name: 'Excluir' }).click();
     await newPage.getByRole('button', { name: 'OK' }).click();

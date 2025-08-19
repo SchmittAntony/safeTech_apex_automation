@@ -1,11 +1,14 @@
-name: Run Automation Tests
+name: Run Playwright Tests
 
 on:
-  workflow_dispatch:   # 🔹 Habilita o botão "Run workflow"
+  workflow_dispatch: # Executa manualmente (botão)
 
 jobs:
-  tests:
+  playwright-tests:
     runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/playwright:v1.48.0-jammy # Já vem com Chromium e Firefox instalados
 
     steps:
       - name: Checkout repository
@@ -19,5 +22,28 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Playwright tests
-        run: npx playwright test
+      # Executa testes no Chromium e salva relatório
+      - name: Run Playwright tests (Chromium)
+        run: |
+          npx playwright test --project=chromium --reporter=html
+          mv playwright-report playwright-report-chromium
+
+      - name: Upload Chromium Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-chromium
+          path: playwright-report-chromium/
+
+      # Executa testes no Firefox e salva relatório
+      - name: Run Playwright tests (Firefox)
+        run: |
+          npx playwright test --project=firefox --reporter=html
+          mv playwright-report playwright-report-firefox
+
+      - name: Upload Firefox Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-firefox
+          path: playwright-report-firefox/

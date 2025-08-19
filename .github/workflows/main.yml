@@ -27,7 +27,7 @@ jobs:
           npx playwright test \
             --project=${{ github.event.inputs.browser }} \
             --reporter=list,html \
-            --workers=2
+            --workers=1
 
       - name: Upload Playwright Report
         if: always()

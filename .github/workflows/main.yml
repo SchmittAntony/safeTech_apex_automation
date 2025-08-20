@@ -1,18 +1,17 @@
 name: Playwright Tests
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Permite rodar manualmente via botão
     inputs:
       browser:
-        description: "Escolher navegador (chromium ou firefox)"
+        description: "Escolher navegador"
         required: true
         default: "chromium"
 
 jobs:
   tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 60 # Aumenta o timeout geral
-    container: mcr.microsoft.com/playwright:v1.54.2-jammy
+    container: mcr.microsoft.com/playwright:v1.54.2-jammy  # Imagem oficial Playwright
 
     steps:
       - name: Checkout repository
@@ -21,20 +20,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
       - name: Run Playwright Tests
         run: |
+          npx playwright install --with-deps
           npx playwright test \
             --project=${{ github.event.inputs.browser }} \
-            --reporter=list,html \
+            --reporter=html \
             --workers=1 \
-            --timeout=120000 # Timeout de 2 minutos por teste
+            --timeout=120000
 
-      - name: Upload Playwright Report
+      - name: Upload Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ github.event.inputs.browser }}
+          name: playwright-report
           path: playwright-report

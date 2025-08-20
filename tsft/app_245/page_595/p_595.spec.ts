@@ -59,14 +59,12 @@ test('Cadastro Banco por Empresa > Valido', async ({ page, context }) => {
 
     // Pesquisa Registro criado
     const campoPesquisa = newPage.getByRole('textbox', { name: 'Relatório de Pesquisa' });
-    await campoPesquisa.isVisible();
-    await campoPesquisa.click();
     await campoPesquisa.fill('Teste Qualidade - QA');
-
     await newPage.getByRole('button', { name: 'Ir', exact: true }).click();
 
-    // Verifica registro/exclusão
+    // Espera o resultado aparecer
     const campo = newPage.locator('td').filter({ hasText: 'TESTE QUALIDADE - QA' });
+    await campo.first().waitFor({ state: 'visible' });  // <-- aguarda até a linha ser visível
 
     if (await campo.count() > 0) {
         // Localiza o botão de editar na mesma linha
@@ -76,14 +74,13 @@ test('Cadastro Banco por Empresa > Valido', async ({ page, context }) => {
 
         await botaoEditar.click();
     }
-
-    await newPage.waitForTimeout(4000);
-
     await newPage.locator('iframe[title="Cadastro Banco por Empresa"]')
         .contentFrame()
         .getByRole('button', { name: 'Excluir' })
         .click();
     await newPage.getByRole('button', { name: 'OK' }).click();
+
+    await newPage.waitForTimeout(8000);
 
 });
 

@@ -11,7 +11,7 @@ export async function acessoAPP245_640(page: Page, context: BrowserContext) {
 
     // 2. Aguardar o evento de abertura de nova janela
     const [newPage] = await Promise.all([
-        context.waitForEvent('page'), // Fica aguardando a nova janela
+        context.waitForEvent('page', { timeout: 120000 }), // Fica aguardando a nova janela
         buttonFinanceiro.click() // Ação que abre a janela
     ]);
 

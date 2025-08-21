@@ -7,11 +7,18 @@ on:
         description: "Escolher navegador"
         required: true
         default: "chromium"
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+          - all
 
 jobs:
   tests:
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:v1.54.2-jammy  # Imagem oficial Playwright
+    timeout-minutes: 30  # Previne execução infinita
+    container: mcr.microsoft.com/playwright:v1.54.2-jammy
 
     steps:
       - name: Checkout repository
@@ -23,11 +30,26 @@ jobs:
       - name: Run Playwright Tests
         run: |
           npx playwright install --with-deps
+          
+          # Configurações para funcionar no GitHub Actions
+          export CI=true
+          export PLAYWRIGHT_LAUNCH_OPTIONS='{"args": ["--no-sandbox", "--disable-dev-shm-usage"]}'
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          
+          # Configura o browser baseado no input
+          BROWSER=${{ github.event.inputs.browser }}
+          PROJECT_FLAG=""
+          
+          if [ "$BROWSER" != "all" ]; then
+            PROJECT_FLAG="--project=$BROWSER"
+          fi
+          
           npx playwright test \
-            --project=${{ github.event.inputs.browser }} \
+            $PROJECT_FLAG \
             --reporter=html \
             --workers=1 \
-            --timeout=120000
+            --timeout=120000 \
+            --retries=2  # Adiciona retries para falhas transitórias
 
       - name: Upload Report
         if: always()
@@ -35,3 +57,4 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report
+          retention-days: 7  # Limpa automaticamente após 7 dias

@@ -24,6 +24,7 @@ export default defineConfig({
   },
   use: {
     trace: 'on-first-retry',
+    baseURL: process.env.SAFETECH_URL,
     launchOptions: {
     args: ['--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox']
   }

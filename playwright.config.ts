@@ -24,6 +24,9 @@ export default defineConfig({
   },
   use: {
     trace: 'on-first-retry',
+    launchOptions: {
+    args: ['--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox']
+  }
   },
   projects: [
     {

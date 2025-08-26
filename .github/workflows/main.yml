@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Playwright Tests with Browser Detection
 
 on:
   workflow_dispatch:
@@ -7,6 +7,11 @@ on:
         description: "Escolher navegador"
         required: true
         default: "chromium"
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
 
 jobs:
   tests:
@@ -18,35 +23,86 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
-
-      - name: Install dependencies (with retry)
-        run: |
-          npm config set fetch-retries 5
-          npm config set fetch-retry-factor 2
-          npm config set fetch-retry-mintimeout 1000
-          npm config set fetch-retry-maxtimeout 60000
-          npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps ${{ github.event.inputs.browser }}
 
-      - name: Run Playwright Tests
+      - name: Setup display for browser (Xvfb)
+        run: |
+          apt-get update
+          apt-get install -y xvfb
+          Xvfb :99 -screen 0 1024x768x16 &
+          export DISPLAY=:99
+
+      - name: Run Playwright Tests with Browser Detection
         env:
           DEBUG: pw:api
+          BROWSER_TYPE: ${{ github.event.inputs.browser }}
         run: |
-          npx playwright test \
-            --project=${{ github.event.inputs.browser }} \
-            --reporter=html \
-            --workers=1
+          # Criar script temporário para detecção de navegador
+          cat > browser-detection.js << 'EOF'
+          const { chromium, firefox, webkit, expect } = require('@playwright/test');
+          
+          async function runTestsWithBrowserDetection() {
+            const browserType = process.env.BROWSER_TYPE || 'chromium';
+            let browser;
+            
+            console.log(`Iniciando navegador: ${browserType}`);
+            
+            switch (browserType) {
+              case 'firefox':
+                browser = await firefox.launch({ headless: false });
+                break;
+              case 'webkit':
+                browser = await webkit.launch({ headless: false });
+                break;
+              default:
+                browser = await chromium.launch({ headless: false });
+            }
 
-      - name: Upload Playwright Report
+            console.log(`Aguardando navegador ${browserType} abrir...`);
+            
+            // Verifica se o navegador foi aberto
+            await expect.poll(async () => {
+              const pages = browser.contexts().flatMap(context => context.pages());
+              return pages.length > 0;
+            }, {
+              message: 'Navegador não foi aberto dentro do tempo limite',
+              timeout: 30000 // 30 segundos
+            }).toBeTruthy();
+
+            console.log('Navegador aberto com sucesso! Continuando testes...');
+            
+            // Executar os testes normais do Playwright
+            const { execSync } = require('child_process');
+            try {
+              execSync('npx playwright test --project=' + browserType + ' --reporter=html --workers=1', { 
+                stdio: 'inherit',
+                env: { ...process.env, DISPLAY: ':99' }
+              });
+            } catch (error) {
+              console.error('Testes falharam:', error.message);
+              process.exit(1);
+            } finally {
+              await browser.close();
+            }
+          }
+
+          runTestsWithBrowserDetection().catch(error => {
+            console.error('Erro durante execução:', error);
+            process.exit(1);
+          });
+          EOF
+          
+          # Executar o script de detecção
+          node browser-detection.js
+
+      - name: Upload Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: playwright-report
+          retention-days: 7

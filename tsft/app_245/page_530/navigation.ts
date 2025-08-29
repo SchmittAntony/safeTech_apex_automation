@@ -17,7 +17,6 @@ export async function acessoAPP245_530(page: Page, context: BrowserContext) {
 
     // 3. Verificações na nova janela
     await newPage.waitForLoadState('domcontentloaded');
-    console.log('Nova URL:', newPage.url());
 
     // 4. Validação básica
     await expect(newPage).toHaveTitle('Financeiro'); // Adapte se necessário

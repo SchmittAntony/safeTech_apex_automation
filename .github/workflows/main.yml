@@ -18,23 +18,45 @@ jobs:
         node-version: '20'
         cache: 'npm'
 
+    - name: Create .env file with secrets
+      run: |
+        cat << EOF > .env
+        # Credenciais do sistema
+        SAFETECH_URL=${{ secrets.SAFETECH_URL }}
+        SAFETECH_USERNAME=${{ secrets.SAFETECH_USERNAME }}
+        SAFETECH_PASSWORD=${{ secrets.SAFETECH_PASSWORD }}
+        
+        # Ambiente (development, production, test)
+        NODE_ENV=test
+        
+        # Timeouts
+        PLAYWRIGHT_TIMEOUT=30000
+        PLAYWRIGHT_NAVIGATION_TIMEOUT=60000
+        EOF
+
     - name: Install dependencies
       run: npm ci
 
     - name: Install only Chromium browser
       run: npx playwright install chromium
 
-    - name: Install Xvfb for headful mode
+    - name: Install dependencies and enable debug
       run: |
         sudo apt-get update
         sudo apt-get install -y xvfb
 
-    - name: Run Playwright tests only on Chromium
+    - name: Run Playwright tests with debug info
       run: |
         xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
-        npx playwright test --project=chromium
+        npx playwright test --project=chromium \
+          --timeout=60000 \
+          --retries=2 \
+          --workers=1 \
+          --verbose
       env:
         CI: true
+        DEBUG: pw:api
+        PLAYWRIGHT_TEST_TIMEOUT: 60000
 
     - name: Generate HTML report
       if: always()
@@ -47,3 +69,21 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 7
+
+    - name: Upload trace files if tests fail
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-traces
+        path: test-results/
+        retention-days: 7
+
+    - name: Show environment info for debugging
+      if: failure()
+      run: |
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+        echo "Playwright version: $(npx playwright --version)"
+        echo "Current directory: $(pwd)"
+        echo "Directory contents:"
+        ls -la

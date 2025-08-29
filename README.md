@@ -8,6 +8,8 @@ Este projeto consiste na automação de testes funcionais dos programas presente
 ![Node.js](https://img.shields.io/badge/Node.js-20.x%2B-brightgreen?logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-blue?logo=typescript&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-1.40%2B-orange?logo=playwright&logoColor=white)
+![Allure Reports](https://img.shields.io/badge/Allure_Reports-2.24%2B-blue?logo=allure&logoColor=white)
+
 
 **Playwright** → automação de testes web
 
@@ -18,6 +20,8 @@ Este projeto consiste na automação de testes funcionais dos programas presente
 **Page Object Model (POM)** → padrão de organização do código
 
 **Test Runner do Playwright** → Padrão de execução dos testes
+
+**Allure Reports** → Relátorios mais detalhados
 
 # Como executar o projeto 
 
@@ -48,3 +52,5 @@ Este projeto consiste na automação de testes funcionais dos programas presente
 **Para execução do programa especifico**
 - `npx playwright test tsft/app_245/page_245/p_245.spec.ts`
 
+**Para execução com relátorio Allure Reposts**
+- `npm run test` e `npm run test:headed`

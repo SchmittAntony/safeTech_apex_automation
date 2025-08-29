@@ -17,8 +17,6 @@ test('Cadastro Banco por Empresa > Valido', async ({ page, context }) => {
     await page530.verificarEClicarEditarCadastro('TESTE QUALIDADE - QA');
     await page530.clicarExluirCadastro();
 
-    await newPage.waitForTimeout(8000);
-
 });
 
 test('Cadastro com dados Inválidos', async ({ page, context }) => {

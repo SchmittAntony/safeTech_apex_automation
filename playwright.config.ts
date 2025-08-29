@@ -17,13 +17,18 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   workers: 1, // força execução sequencial
-  reporter: 'html',
+  reporter: [
+    ['list'], // mostra no terminal
+    ['allure-playwright'] // gera resultados do allure
+  ],
   timeout: 120000, // 2 minutos por teste
   expect: {
     timeout: 10000,
   },
   use: {
-    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure',
     baseURL: process.env.SAFETECH_URL,
     launchOptions: {
     args: ['--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox']

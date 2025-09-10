@@ -1,25 +1,29 @@
+import * as allure from "allure-js-commons";
 import { test } from '@playwright/test';
 import { acessoAPP245_325 } from './navigation';
 import { p_325 } from './page';
 
 test.describe.configure({ mode: 'serial' });
 
-test('Cadastro de Banco válido', async ({ page, context }) => {
+test('Cadastro de Banco válido - Fluxo completo', async ({ page, context }) => {
+    await allure.epic("APP245_325 - Cadastro de Bancos");
+    await allure.feature("Validações de Cadastro válido");
+    await allure.story("Fluxo completo de cadastro válido");
+
     const newPage = await acessoAPP245_325(page, context);
     const page325 = new p_325(newPage);
 
-    // Realiza cadastro completo
     await page325.realizarCadastroCompleto();
-
-    // Pesquisa e verifica o cadastro
     await page325.pesquisarCadastro('Teste automatizado - Qualidade');
     await page325.verificarCadastroCriado('TESTE AUTOMATIZADO - QUALIDADE');
-    
-    // Exclui o cadastro
     await page325.excluirCadastro();
 });
 
-test('Tentativa de cadastro sem código Banco', async ({ page, context }) => {
+test('Cadastro de Banco inválido', async ({ page, context }) => {
+    await allure.epic("APP245_325 - Cadastro de Bancos");
+    await allure.feature("Validações de cadastro inválido");
+    await allure.story("Tentativa de cadastro sem código do banco");
+
     const newPage = await acessoAPP245_325(page, context);
     const page325 = new p_325(newPage);
 

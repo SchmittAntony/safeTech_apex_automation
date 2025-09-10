@@ -118,7 +118,6 @@ export class p_325 {
         await this.btnEditar.click();
         await this.btnExcluir.click();
         await this.btnOK.click();
-        await this.btnVoltar.click();
         await this.page.waitForTimeout(8000);
     }
 

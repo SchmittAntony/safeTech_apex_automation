@@ -1,10 +1,15 @@
+import * as allure from "allure-js-commons";
 import { test, expect } from '@playwright/test';
 import { acessoAPP245_465 } from './navigation';
 import { p_465 } from './page';
 
 test.describe.configure({ mode: 'serial' });
 
-test('Cadastro de Banco válido', async ({ page, context }) => {
+test('Cadastro Tipo Vencimento Boleto - Fluxo completo', async ({ page, context }) => {
+    await allure.epic("APP245_465 - Cadastro Tipo vencimento Boleto");
+    await allure.feature("Validações de Cadastro válido");
+    await allure.story("Fluxo completo de cadastro válido");
+
     const newPage = await acessoAPP245_465(page, context);
     const page465 = new p_465(newPage); 
 
@@ -18,7 +23,11 @@ test('Cadastro de Banco válido', async ({ page, context }) => {
 })
 
 
-test('Cadastro de Banco Inválido', async ({ page, context }) => {
+test('Cadastro Tipo Vencimento Boleto inválido', async ({ page, context }) => {
+    await allure.epic("APP245_465 - Cadastro Tipo vencimento Boleto");
+    await allure.feature("Validações de cadastro inválido");
+    await allure.story("Tentativa de cadastro sem campos obrigatorios");
+
     const newPage = await acessoAPP245_465(page, context);
     const page465 = new p_465(newPage); 
 

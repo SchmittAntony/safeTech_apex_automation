@@ -16,3 +16,7 @@ node_modules/
 #allure report
 allure-results
 allure-report
+
+#dashboard
+logs/
+results/

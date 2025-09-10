@@ -37,20 +37,39 @@ Este projeto consiste na automação de testes funcionais dos programas presente
 
 # Comandos para execução 
 
-**Para execução sem visualização**
-- ` npx playwright test ` 
+### Para execução sem visualização
+```bash 
+npx playwright test 
+``` 
 
-**Para visualização com painel Playwright**
-- ` npx playwright test --ui` 
+### Para visualização com painel Playwright
+```bash 
+npx playwright test --ui 
+```
 
-**Para execução no modo debug linha por linha**
-- `npx playwright test --debug`
+### Para execução no modo debug linha por linha
+```bash 
+npx playwright test --debug`
+```
 
-**Para execução no modo headed navegador visível**
-- `npx playwright test --headed`
+### Para execução no modo headed navegador visível
+```bash 
+playwright test --headed`
+```
 
-**Para execução do programa especifico**
-- `npx playwright test tsft/app_245/page_245/p_245.spec.ts`
+### Para execução do programa especifico
+```bash 
+npx playwright test tsft/app_245/page_245/p_245.spec.ts`
+```
 
-**Para execução com relátorio Allure Reposts**
-- `npm run test` e `npm run test:headed`
+### Para execução com relátorio Allure Reposts
+```bash 
+npm run test:report
+
+npm run test
+ 
+npm run test:headed
+```
+
+
+

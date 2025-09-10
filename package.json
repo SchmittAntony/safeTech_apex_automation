@@ -4,16 +4,21 @@
   "description": "Projeto de automação e2e de aplicação oracle apex, projeto POC",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test && allure generate allure-results -o allure-report --clean && allure open allure-report",
-    "test:headed": "npx playwright test --headed && allure generate allure-results -o allure-report --clean && allure open allure-report"
+    "test": "npx playwright test; allure generate allure-results -o allure-report --clean; allure open allure-report",
+    "test:headed": "npx playwright test --headed && allure generate allure-results -o allure-report --clean && allure open allure-report", 
+    "test:report": "node run-tests.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Antony Schmitt",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.54.2",
     "@types/node": "^24.3.0",
     "allure-playwright": "^3.3.3",
     "dotenv": "^17.2.1"
+  },
+  "dependencies": {
+    "nunjucks": "^3.2.4",
+    "xml2js": "^0.6.2"
   }
 }

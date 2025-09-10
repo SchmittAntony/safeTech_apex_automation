@@ -12,14 +12,14 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
- testDir: './tsft',
+  testDir: './tsft',
   fullyParallel: false, // garante que não roda paralelo dentro do mesmo arquivo
   forbidOnly: !!process.env.CI,
   retries: 0,
   workers: 1, // força execução sequencial
   reporter: [
-    ['list'], // mostra no terminal
-    ['allure-playwright'] // gera resultados do allure
+    ['allure-playwright'], // gera resultados do allure
+    ['list', { printSteps: true }], // Logs no console
   ],
   timeout: 120000, // 2 minutos por teste
   expect: {
@@ -31,8 +31,8 @@ export default defineConfig({
     trace: 'retain-on-failure',
     baseURL: process.env.SAFETECH_URL,
     launchOptions: {
-    args: ['--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox']
-  }
+      args: ['--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox']
+    }
   },
   projects: [
     {

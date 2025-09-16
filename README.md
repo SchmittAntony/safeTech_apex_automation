@@ -49,12 +49,12 @@ npx playwright test --ui
 
 ### Para execução no modo debug linha por linha
 ```bash 
-npx playwright test --debug`
+npx playwright test --debug
 ```
 
 ### Para execução no modo headed navegador visível
 ```bash 
-playwright test --headed`
+npx playwright test --headed
 ```
 
 ### Para execução do programa especifico
